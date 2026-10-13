@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const WEBHOOK_URL =
+const DEFAULT_WEBHOOK =
   "https://connect.pabbly.com/workflow/sendwebhookdata/IjU3NjcwNTZkMDYzZjA0MzY1MjY1NTUzNzUxMzUi_pc";
 
 const IDENTITY_OPTIONS = [
@@ -15,8 +15,10 @@ const IDENTITY_OPTIONS = [
   "Student",
 ];
 
-export default function RegistrationModal({ isOpen, onClose }) {
+export default function RegistrationModal({ content, isOpen, onClose }) {
   const router = useRouter();
+  const webhookUrl = content?.webhookUrl || DEFAULT_WEBHOOK;
+
   const [step, setStep] = useState("identity"); // identity | coaching | confidential | commitment | contact | rejected
   const [selectedIdentity, setSelectedIdentity] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -155,7 +157,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
     setIsSubmitting(true);
 
     try {
-      await fetch(WEBHOOK_URL, {
+      await fetch(webhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         mode: "no-cors",
@@ -187,17 +189,28 @@ export default function RegistrationModal({ isOpen, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 animate-fade-in"
+      style={{
+        backgroundColor: "rgba(0, 0, 0, 0.88)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) handleClose();
       }}
     >
-      <div className="border-gradient-gold bg-card rounded-2xl p-6 md:p-8 max-w-md w-full relative shadow-2xl">
+      <div
+        className="border-gradient-gold rounded-2xl p-4 sm:p-6 md:p-8 max-w-md w-full relative shadow-2xl max-h-[92vh] overflow-y-auto"
+        style={{
+          backgroundColor: "#191614",
+          boxShadow: "0 25px 60px -15px rgba(0, 0, 0, 0.95), 0 0 35px rgba(217, 165, 32, 0.25)",
+        }}
+      >
         {/* Close button */}
         <button
           onClick={handleClose}
           type="button"
-          className="absolute top-4 right-4 text-muted-foreground hover:text-foreground p-1 transition-colors rounded-full"
+          className="absolute top-3 sm:top-4 right-3 sm:right-4 text-muted-foreground hover:text-foreground p-1.5 transition-colors rounded-full hover:bg-white/10 cursor-pointer z-10"
           aria-label="Close modal"
         >
           <svg
@@ -426,7 +439,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="mirror-button w-full text-primary-foreground font-display text-lg py-5 px-6 border-0 rounded-lg mt-6 font-semibold cursor-pointer disabled:opacity-50"
+                className="mirror-button w-full text-primary-foreground font-display text-base sm:text-lg py-3.5 sm:py-5 px-4 sm:px-6 border-0 rounded-lg mt-4 sm:mt-6 font-semibold cursor-pointer disabled:opacity-50"
               >
                 {isSubmitting ? "Submitting..." : "Claim My Spot"}
               </button>

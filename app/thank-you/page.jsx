@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function ThankYouPage() {
+  const [content, setContent] = useState(null);
+
   useEffect(() => {
     window.scrollTo(0, 0);
     if (typeof window !== "undefined" && window.fbq) {
@@ -11,7 +13,20 @@ export default function ThankYouPage() {
         window.fbq("track", "Lead", {});
       } catch (_) {}
     }
+
+    fetch("/api/content")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) setContent(data);
+      })
+      .catch((err) => console.error("Error loading content:", err));
   }, []);
+
+  const thankYou = content?.thankYou || {};
+  const whatsappUrl = thankYou.whatsappUrl || "https://lp1.launchatscale.com/Joinwhatsapp";
+  const workshopDate = thankYou.workshopDate || "17th January 2025";
+  const workshopTime = thankYou.workshopTime || "7:00 PM IST";
+  const copyright = thankYou.copyright || "© 2024 Shubh Jain. All Rights Reserved.";
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-12 text-foreground">
@@ -46,10 +61,10 @@ export default function ThankYouPage() {
 
         {/* Primary WhatsApp Button */}
         <a
-          href="https://lp1.launchatscale.com/Joinwhatsapp"
+          href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block font-display bg-[#25D366] hover:bg-[#20BD5A] text-white animate-fade-in w-full text-lg py-5 px-6 rounded-lg mb-6 font-semibold transition-colors shadow-lg"
+          className="inline-block font-display bg-[#25D366] hover:bg-[#20BD5A] text-white animate-fade-in w-full text-base sm:text-lg py-4 sm:py-5 px-4 sm:px-6 rounded-lg font-semibold transition-colors shadow-lg text-center"
           style={{ animationDelay: "0.15s", textDecoration: "none" }}
         >
           Join WhatsApp Community
@@ -87,7 +102,7 @@ export default function ThankYouPage() {
                 <rect width="18" height="18" x="3" y="4" rx="2" />
                 <path d="M3 10h18" />
               </svg>
-              <span className="font-body text-lg">17th January 2025</span>
+              <span className="font-body text-lg">{workshopDate}</span>
             </div>
             {/* Time */}
             <div className="flex items-center justify-center gap-3 text-foreground">
@@ -104,7 +119,7 @@ export default function ThankYouPage() {
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 16 14" />
               </svg>
-              <span className="font-body text-lg">7:00 PM IST</span>
+              <span className="font-body text-lg">{workshopTime}</span>
             </div>
           </div>
           <p className="font-body text-sm text-muted-foreground mt-4">
@@ -125,10 +140,10 @@ export default function ThankYouPage() {
 
         {/* Secondary WhatsApp Button */}
         <a
-          href="https://lp1.launchatscale.com/Joinwhatsapp"
+          href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block font-display bg-[#25D366] hover:bg-[#20BD5A] text-white animate-fade-in w-full text-lg py-5 px-6 rounded-lg font-semibold transition-colors shadow-lg"
+          className="inline-block font-display bg-[#25D366] hover:bg-[#20BD5A] text-white animate-fade-in w-full text-base sm:text-lg py-4 sm:py-5 px-4 sm:px-6 rounded-lg font-semibold transition-colors shadow-lg text-center"
           style={{ animationDelay: "0.5s", textDecoration: "none" }}
         >
           Join WhatsApp Community
@@ -136,7 +151,7 @@ export default function ThankYouPage() {
 
         {/* Footer Copyright */}
         <p className="font-body text-muted-foreground mt-12 text-sm">
-          © 2024 Shubh Jain. All Rights Reserved.
+          {copyright}
         </p>
 
         <div className="mt-4">

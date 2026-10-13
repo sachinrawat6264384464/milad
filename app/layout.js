@@ -1,5 +1,11 @@
 import "./globals.css";
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata = {
   title: "2026 PLAN",
   description: "Build Your ₹1 CRORE Profit Plan For 2026 LIVE with Shubh Jain",
@@ -30,7 +36,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -65,7 +71,10 @@ export default function RootLayout({ children }) {
           />
         </noscript>
       </head>
-      <body className="min-h-screen bg-background text-foreground antialiased selection:bg-primary/30 selection:text-foreground">
+      <body
+        suppressHydrationWarning
+        className="min-h-screen bg-background text-foreground antialiased selection:bg-primary/30 selection:text-foreground"
+      >
         {children}
       </body>
     </html>
